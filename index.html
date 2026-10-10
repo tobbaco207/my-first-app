@@ -1,1 +1,24 @@
 
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>나의 첫 앱</title>
+<style>
+body { font-family: sans-serif; text-align: center; padding-top: 80px; }
+button { font-size: 24px; padding: 15px; margin: 5px; }
+</style>
+</head>
+<body>
+<h1>나의 첫 앱</h1>
+<h2 id="count">0</h2>
+<button onclick="add()">+1 증가</button>
+<button onclick="reset()">초기화</button>
+<script>
+let count = 0;
+function add() { count++; document.getElementById('count').innerText = count; }
+function reset() { count = 0; document.getElementById('count').innerText = count; }
+</script>
+</body>
+</html>
