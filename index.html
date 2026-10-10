@@ -1,24 +1,59 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>나의 첫 앱</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>행운의 룰렛</title>
 <style>
-body { font-family: sans-serif; text-align: center; padding-top: 80px; }
-button { font-size: 24px; padding: 15px; margin: 5px; }
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:linear-gradient(160deg,#17133d,#44318d);color:white;font-family:sans-serif;text-align:center;padding:30px 15px}
+h1{font-size:32px}
+p{color:#ddd}
+.wheel-box{position:relative;width:min(85vw,340px);margin:40px auto 25px}
+.pointer{position:absolute;top:-22px;left:50%;transform:translateX(-50%);z-index:2;font-size:38px;color:#fff}
+#wheel{width:100%;aspect-ratio:1;border:9px solid white;border-radius:50%;background:conic-gradient(#ff6b6b 0deg 60deg,#ffd166 60deg 120deg,#06d6a0 120deg 180deg,#4cc9f0 180deg 240deg,#a78bfa 240deg 300deg,#ff99c8 300deg 360deg);box-shadow:0 12px 35px #0007;position:relative;transition:transform 4s cubic-bezier(.12,.7,.12,1)}
+.item{position:absolute;left:50%;top:50%;font-size:16px;font-weight:bold;color:#24203e;transform:rotate(var(--a)) translateY(-110px) rotate(calc(-1 * var(--a)));margin-left:-25px;margin-top:-10px;width:50px}
+.center{position:absolute;inset:43%;background:white;border-radius:50%;box-shadow:0 0 0 4px #3333}
+button{border:0;border-radius:18px;background:#ffe066;color:#282044;font-size:23px;font-weight:bold;padding:17px 55px;cursor:pointer}
+button:disabled{opacity:.5}
+#result{font-size:26px;font-weight:bold;min-height:65px;margin-top:25px}
 </style>
 </head>
 <body>
-<h1>나의 첫 앱</h1>
-<h2 id="count">0</h2>
-<button onclick="add()">+1 증가</button>
-<button onclick="reset()">초기화</button>
+<h1>🎡 행운의 룰렛</h1>
+<p>오늘의 행운을 시험해 보세요!</p>
+<div class="wheel-box">
+<div class="pointer">▼</div>
+<div id="wheel">
+<div class="item" style="--a:30deg">선물 🎁</div>
+<div class="item" style="--a:90deg">커피 ☕</div>
+<div class="item" style="--a:150deg">꽝 😅</div>
+<div class="item" style="--a:210deg">행운 🍀</div>
+<div class="item" style="--a:270deg">치킨 🍗</div>
+<div class="item" style="--a:330deg">대박 ⭐</div>
+<div class="center"></div>
+</div>
+</div>
+<button id="spin" onclick="spin()">돌리기!</button>
+<div id="result">어디에 당첨될까요?</div>
 <script>
-let count = 0;
-function add() { count++; document.getElementById('count').innerText = count; }
-function reset() { count = 0; document.getElementById('count').innerText = count; }
+const names=["선물 🎁","커피 ☕","꽝 😅","행운 🍀","치킨 🍗","대박 ⭐"];
+let angle=0;
+function spin(){
+const btn=document.getElementById("spin");
+btn.disabled=true;
+document.getElementById("result").textContent="빙글빙글...";
+const pick=Math.floor(Math.random()*6);
+const offset=330-pick*60;
+const current=((angle%360)+360)%360;
+const extra=((offset-current)%360+360)%360;
+angle+=1800+extra;
+document.getElementById("wheel").style.transform="rotate("+angle+"deg)";
+setTimeout(()=>{
+document.getElementById("result").textContent="🎉 "+names[pick]+" 당첨!";
+btn.disabled=false;
+},4100);
+}
 </script>
 </body>
 </html>
