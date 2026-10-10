@@ -3,57 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>행운의 룰렛</title>
+<title>나만의 룰렛</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:linear-gradient(160deg,#17133d,#44318d);color:white;font-family:sans-serif;text-align:center;padding:30px 15px}
-h1{font-size:32px}
-p{color:#ddd}
-.wheel-box{position:relative;width:min(85vw,340px);margin:40px auto 25px}
-.pointer{position:absolute;top:-22px;left:50%;transform:translateX(-50%);z-index:2;font-size:38px;color:#fff}
-#wheel{width:100%;aspect-ratio:1;border:9px solid white;border-radius:50%;background:conic-gradient(#ff6b6b 0deg 60deg,#ffd166 60deg 120deg,#06d6a0 120deg 180deg,#4cc9f0 180deg 240deg,#a78bfa 240deg 300deg,#ff99c8 300deg 360deg);box-shadow:0 12px 35px #0007;position:relative;transition:transform 4s cubic-bezier(.12,.7,.12,1)}
-.item{position:absolute;left:50%;top:50%;font-size:16px;font-weight:bold;color:#24203e;transform:rotate(var(--a)) translateY(-110px) rotate(calc(-1 * var(--a)));margin-left:-25px;margin-top:-10px;width:50px}
-.center{position:absolute;inset:43%;background:white;border-radius:50%;box-shadow:0 0 0 4px #3333}
-button{border:0;border-radius:18px;background:#ffe066;color:#282044;font-size:23px;font-weight:bold;padding:17px 55px;cursor:pointer}
-button:disabled{opacity:.5}
-#result{font-size:26px;font-weight:bold;min-height:65px;margin-top:25px}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(160deg,#17133d,#44318d);color:#fff;font-family:system-ui,sans-serif;text-align:center;padding:24px 15px}h1{font-size:30px;margin:8px 0}p{color:#ddd}.wheel-box{position:relative;width:min(85vw,340px);margin:35px auto 25px}.pointer{position:absolute;top:-25px;left:50%;transform:translateX(-50%);z-index:2;font-size:36px}#wheel{width:100%;aspect-ratio:1;border:9px solid white;border-radius:50%;background:conic-gradient(#ff6b6b 0 60deg,#ffd166 60deg 120deg,#06d6a0 120deg 180deg,#4cc9f0 180deg 240deg,#a78bfa 240deg 300deg,#ff99c8 300deg 360deg);box-shadow:0 12px 35px #0007;position:relative;transition:transform 4s cubic-bezier(.12,.7,.12,1)}.item{position:absolute;left:50%;top:50%;width:72px;margin-left:-36px;margin-top:-10px;font-size:clamp(11px,3vw,15px);font-weight:700;color:#24203e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transform:rotate(var(--a)) translateY(calc(-1 * min(27vw,110px))) rotate(calc(-1 * var(--a)))}.center{position:absolute;inset:43%;background:#fff;border-radius:50%;box-shadow:0 0 0 4px #3333}button{border:0;border-radius:14px;padding:13px 20px;font-size:17px;font-weight:700;cursor:pointer}#spin{background:#ffe066;color:#282044;font-size:23px;padding:16px 55px}button:disabled{opacity:.5}#result{font-size:23px;font-weight:700;min-height:58px;margin-top:22px}.panel{max-width:430px;margin:15px auto;background:#ffffff15;border:1px solid #ffffff33;border-radius:20px;padding:20px 16px}.panel h2{font-size:20px;margin:0 0 14px}.field{display:flex;align-items:center;gap:10px;margin:9px 0}.field label{width:25px;font-weight:700}.field input{flex:1;min-width:0;padding:12px;border-radius:10px;border:2px solid transparent;font-size:17px}.field input:focus{outline:2px solid #ffe066}.actions{display:flex;gap:9px;margin-top:15px}.actions button{flex:1}.save{background:#ffe066;color:#282044}.reset{background:#fff;color:#282044}#notice{font-size:14px;color:#d8ffd6;min-height:22px;margin-top:10px}
 </style>
 </head>
 <body>
-<h1>🎡 행운의 룰렛</h1>
-<p>오늘의 행운을 시험해 보세요!</p>
-<div class="wheel-box">
-<div class="pointer">▼</div>
-<div id="wheel">
-<div class="item" style="--a:30deg">선물 🎁</div>
-<div class="item" style="--a:90deg">커피 ☕</div>
-<div class="item" style="--a:150deg">꽝 😅</div>
-<div class="item" style="--a:210deg">행운 🍀</div>
-<div class="item" style="--a:270deg">치킨 🍗</div>
-<div class="item" style="--a:330deg">대박 ⭐</div>
-<div class="center"></div>
-</div>
-</div>
-<button id="spin" onclick="spin()">돌리기!</button>
-<div id="result">어디에 당첨될까요?</div>
+<h1>🎡 나만의 룰렛</h1><p>항목을 바꾸고 행운을 돌려보세요!</p>
+<div class="wheel-box"><div class="pointer">▼</div><div id="wheel"></div></div>
+<button id="spin" onclick="spin()">돌리기!</button><div id="result" aria-live="polite">어디에 당첨될까요?</div>
+<section class="panel"><h2>✏️ 룰렛 항목 수정</h2><div id="fields"></div><div class="actions"><button class="save" onclick="saveItems()">저장하기</button><button class="reset" onclick="resetItems()">기본값</button></div><div id="notice" aria-live="polite"></div></section>
 <script>
-const names=["선물 🎁","커피 ☕","꽝 😅","행운 🍀","치킨 🍗","대박 ⭐"];
-let angle=0;
-function spin(){
-const btn=document.getElementById("spin");
-btn.disabled=true;
-document.getElementById("result").textContent="빙글빙글...";
-const pick=Math.floor(Math.random()*6);
-const offset=330-pick*60;
-const current=((angle%360)+360)%360;
-const extra=((offset-current)%360+360)%360;
-angle+=1800+extra;
-document.getElementById("wheel").style.transform="rotate("+angle+"deg)";
-setTimeout(()=>{
-document.getElementById("result").textContent="🎉 "+names[pick]+" 당첨!";
-btn.disabled=false;
-},4100);
-}
+const defaults=['선물 🎁','커피 ☕','꽝 😅','행운 🍀','치킨 🍗','대박 ⭐'];
+const key='my-roulette-items-v1';
+let items=[...defaults],angle=0,busy=false;
+try{const saved=JSON.parse(localStorage.getItem(key));if(Array.isArray(saved)&&saved.length===6&&saved.every(x=>typeof x==='string'&&x.trim()))items=saved;}catch(e){}
+const wheel=document.getElementById('wheel');
+function draw(){wheel.replaceChildren();items.forEach((name,i)=>{const el=document.createElement('div');el.className='item';el.style.setProperty('--a',(i*60+30)+'deg');el.textContent=name;el.title=name;wheel.appendChild(el);});const center=document.createElement('div');center.className='center';wheel.appendChild(center);}
+function drawFields(){const fields=document.getElementById('fields');fields.replaceChildren();items.forEach((name,i)=>{const row=document.createElement('div');row.className='field';const label=document.createElement('label');label.htmlFor='item'+i;label.textContent=(i+1)+'.';const input=document.createElement('input');input.id='item'+i;input.value=name;input.maxLength=12;input.setAttribute('aria-label',(i+1)+'번 항목');row.append(label,input);fields.appendChild(row);});}
+function saveItems(){if(busy)return;const next=defaults.map((_,i)=>document.getElementById('item'+i).value.trim());if(next.some(x=>!x)){document.getElementById('notice').textContent='6개 항목을 모두 입력해 주세요.';return;}items=next;draw();document.getElementById('result').textContent='어디에 당첨될까요?';try{localStorage.setItem(key,JSON.stringify(items));document.getElementById('notice').textContent='✅ 저장했어요!';}catch(e){document.getElementById('notice').textContent='화면은 변경됐지만 브라우저 저장에 실패했어요.';}}
+function resetItems(){if(busy)return;items=[...defaults];draw();drawFields();document.getElementById('result').textContent='어디에 당첨될까요?';try{localStorage.setItem(key,JSON.stringify(items));document.getElementById('notice').textContent='기본 항목으로 돌아왔어요.';}catch(e){document.getElementById('notice').textContent='기본값으로 바뀌었지만 저장에 실패했어요.';}}
+function spin(){if(busy)return;busy=true;const btn=document.getElementById('spin');btn.disabled=true;document.getElementById('result').textContent='빙글빙글...';const pick=Math.floor(Math.random()*6);const target=(330-pick*60+360)%360;const current=((angle%360)+360)%360;const extra=(target-current+360)%360;angle+=1800+extra;wheel.style.transform='rotate('+angle+'deg)';setTimeout(()=>{document.getElementById('result').textContent='🎉 '+items[pick]+' 당첨!';busy=false;btn.disabled=false;},4100);}
+draw();drawFields();
 </script>
 </body>
+
 </html>
